@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="true">Meet</string>
+    <string name="name_app">SGU-Meet</string>
+    <string name="login">Login</string>
+    <string name="sig_up">Sign up</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+<!--    <string name="name_app">SGU-Meet</string>-->
+<!--    <string name="name_app">SGU-Meet</string>-->
+</resources>

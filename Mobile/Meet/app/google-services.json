@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "893486299437",
+    "firebase_url": "https://sgu-meet-default-rtdb.firebaseio.com",
+    "project_id": "sgu-meet",
+    "storage_bucket": "sgu-meet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:893486299437:android:201f1a6caba1f5fb0ffba4",
+        "android_client_info": {
+          "package_name": "com.example.meet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjuTGDDKn3iX5-rLxlaHmXhXSXYG57wQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
