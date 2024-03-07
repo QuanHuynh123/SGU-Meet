@@ -41,6 +41,7 @@ public class CRUDService {
         Firestore dbFirestore  = FirestoreClient.getFirestore();
         ApiFuture<WriteResult> writeResult = dbFirestore.collection("user").document(documentId).delete();
         return "Successfully delete " + documentId ;
+        
     }
 
     public void check (){

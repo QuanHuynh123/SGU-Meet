@@ -17,18 +17,18 @@
         android:orientation="vertical"
         android:gravity="center">
 
-    <TextView
-        android:id="@+id/name_app"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/acme"
-        android:padding="10dp"
-        android:text="@string/name_app"
-        android:textAlignment="center"
-        android:textColor="#1DA1F2"
-        android:textSize="60sp" />
+        <TextView
+            android:id="@+id/name_app"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/acme"
+            android:padding="10dp"
+            android:text="@string/name_app"
+            android:textAlignment="center"
+            android:textColor="#1DA1F2"
+            android:textSize="60sp" />
 
-    <Button
+        <Button
         android:id="@+id/btn_join"
         android:layout_width="300dp"
         android:layout_height="wrap_content"

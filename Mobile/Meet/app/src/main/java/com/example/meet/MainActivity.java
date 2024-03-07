@@ -8,37 +8,42 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.meet.model.ListChat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
-    private Button buttonLogout ;
-    private TextView textName ;
-    private ImageView imgAvatar ;
+    private List<ListChat> listChatFriend;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textName = findViewById(R.id.hello_name);
-        imgAvatar = findViewById(R.id.avatar);
-        buttonLogout = findViewById(R.id.logout);
+        listView = (ListView) findViewById(R.id.idListView);
+        listChatFriend = new ArrayList<>();
+        listChatFriend.add(new ListChat(1,"Quan","Hello anh ban","2h30pm"));
+        listChatFriend.add(new ListChat(2,"Tai","Choi game khong","2h30pm"));
+        listChatFriend.add(new ListChat(3,"Wang","Tft ne bro","2h30pm"));
+        listChatFriend.add(new ListChat(4,"Loc","Tft ne bro","2h30pm"));
+        listChatFriend.add(new ListChat(5,"Thai","Tft ne bro","2h30pm"));
+        listChatFriend.add(new ListChat(6,"Quan Pham","Tft ne bro","2h30pm"));
+        listChatFriend.add(new ListChat(7,"Quan Tan","Tft ne bro","2h30pm"));
+        listChatFriend.add(new ListChat(8,"Cieu","Tft ne bro","2h30pm"));
+        listChatFriend.add(new ListChat(9,"Tommy","Tft ne bro","2h30pm"));
 
-        buttonLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth auth = FirebaseAuth.getInstance();
-                auth.signOut();
-                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                startActivity(intent);
-            }
-        });
-        userInformation();
+        ListAdapter adapter = new ListAdapter(this,R.layout.item_custom_listview,listChatFriend);
+        listView.setAdapter(adapter);
+
     }
 
     private void userInformation(){
@@ -50,15 +55,17 @@ public class MainActivity extends AppCompatActivity {
         String name  = user.getDisplayName();
         String email = user.getEmail();
 
-        if(name == null) textName.setVisibility(View.GONE);
-        else {
-            textName.setVisibility(View.VISIBLE);
-            textName.setText(name);
-        }
-
-        Uri imgUrl = user.getPhotoUrl();
-        textName.setText(email);
-
-        Glide.with(this).load(imgUrl).error(R.drawable.avatar).into(imgAvatar);
+//        if(name == null) textName.setVisibility(View.GONE);
+//        else {
+//            textName.setVisibility(View.VISIBLE);
+//            textName.setText(name);
+//        }
+//
+//        Uri imgUrl = user.getPhotoUrl();
+//        textName.setText(email);
+//
+//        Glide.with(this).load(imgUrl).error(R.drawable.avatar).into(imgAvatar);
+//
+//        System.out.println(" cc " + Glide.with(this).load(R.drawable.avatar));
     }
 }
