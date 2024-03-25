@@ -1,6 +1,6 @@
 package com.example.meet.model;
 
-public class ListChat {
+public class ChatModel {
     private int id;
     private String name ;
     private String chat;
@@ -10,7 +10,7 @@ public class ListChat {
         return id;
     }
 
-    public ListChat(int id, String name, String chat, String time) {
+    public ChatModel(int id, String name, String chat, String time) {
         this.id = id;
         this.name = name;
         this.chat = chat;

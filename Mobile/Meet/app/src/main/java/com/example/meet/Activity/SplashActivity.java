@@ -1,4 +1,4 @@
-package com.example.meet;
+package com.example.meet.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,8 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.meet.R;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -20,7 +19,7 @@ public class SplashActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this,OptionActivity.class);
+                Intent intent = new Intent(SplashActivity.this, OptionActivity.class);
                 startActivity(intent);
                 finish();
             }

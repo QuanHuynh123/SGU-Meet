@@ -4,51 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".Activity.MainActivity">
 
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/paperMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/navigationbottom" />
 
-    <LinearLayout
-        android:id="@+id/header_app"
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/add"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/navigationbottom" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigationbottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:itemBackground="@color/white"
+        app:itemIconTint="@color/color_item_bottom_nav"
+        app:itemTextColor="@color/color_item_bottom_nav"
+        android:background="@drawable/navigation_bottom_border"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:orientation="horizontal"
-        android:layout_marginTop="30dp">
-    <TextView
-        android:id="@+id/name_app"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/acme"
-        android:padding="10dp"
-        android:text="@string/name_app"
-        android:textAlignment="center"
-        android:textColor="#1DA1F2"
-        android:textSize="30sp"
-        />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/header_app">
-        <ListView
-        android:id="@+id/idListView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/add"
-            android:layout_alignParentBottom="true"/>
-    </RelativeLayout>
-
+        app:menu="@menu/item_nav_bottom"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

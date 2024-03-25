@@ -1,4 +1,4 @@
-package com.example.meet.Firebase;
+package com.example.meet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class CRUDController {
         return crudService.getCRUD(documentId);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/updatec")
     public String updateCRUD(@RequestBody CRUD crud) throws InterruptedException, ExecutionException{
         return crudService.updateCRUD(crud);
     }

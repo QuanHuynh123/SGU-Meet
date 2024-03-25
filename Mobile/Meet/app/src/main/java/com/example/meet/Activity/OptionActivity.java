@@ -1,4 +1,4 @@
-package com.example.meet;
+package com.example.meet.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.meet.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -30,6 +31,8 @@ public class OptionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                auth.signOut();
                 if(user == null){
                     //chua login
                     Intent intent = new Intent(OptionActivity.this, LoginActivity.class);

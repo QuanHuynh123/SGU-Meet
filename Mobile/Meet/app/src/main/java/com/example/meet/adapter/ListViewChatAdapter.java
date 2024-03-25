@@ -1,6 +1,7 @@
-package com.example.meet;
+package com.example.meet.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,27 +13,29 @@ import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.example.meet.model.ListChat;
+import com.example.meet.Activity.ChatWithFriendActivity;
+import com.example.meet.R;
+import com.example.meet.model.ChatModel;
 
 import java.util.List;
 
-public class ListAdapter extends BaseAdapter {
+public class ListViewChatAdapter extends BaseAdapter {
     private Context context;
     private int idLayout;
-    private List<ListChat> listChats;
+    private List<ChatModel> chatModels;
     private int positionSelect = -1;
 
-    public ListAdapter(Context context, int idLayout, List<ListChat> listChats) {
+    public ListViewChatAdapter(Context context, int idLayout, List<ChatModel> chatModels) {
         this.context = context;
         this.idLayout = idLayout;
-        this.listChats = listChats;
+        this.chatModels = chatModels;
         this.positionSelect = positionSelect;
     }
 
     @Override
     public int getCount() {
-        if(listChats.size() != 0 && !listChats.isEmpty())
-            return listChats.size();
+        if(chatModels.size() != 0 && !chatModels.isEmpty())
+            return chatModels.size();
         return 0;
     }
 
@@ -56,24 +59,25 @@ public class ListAdapter extends BaseAdapter {
         TextView timeChat = (TextView) convertView.findViewById(R.id.time_inbox);
         ImageView imageView = (ImageView) convertView.findViewById(R.id.avatar);
         final ConstraintLayout constraintLayout = (ConstraintLayout) convertView.findViewById(R.id.layout_item_listview);
-        ListChat listChat = listChats.get(position);
+        ChatModel chatModel = chatModels.get(position);
 
-        if(listChats != null && !listChats.isEmpty()){
-            edtNameFriends.setText(listChat.getName());
-            edtLastChat.setText(listChat.getChat());
-            timeChat.setText(listChat.getTime());
+        if(chatModels != null && !chatModels.isEmpty()){
+            edtNameFriends.setText(chatModel.getName());
+            edtLastChat.setText(chatModel.getChat());
+            timeChat.setText(chatModel.getTime());
             imageView.setImageResource(R.drawable.avatar);
         }
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,listChat.getName(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, chatModel.getName(),Toast.LENGTH_SHORT).show();
                 positionSelect = position;
                 notifyDataSetChanged();
             }
         });
         if(positionSelect == position){
-            constraintLayout.setBackgroundColor(Color.BLACK);
+            Intent intent = new Intent(context, ChatWithFriendActivity.class);
+            context.startActivity(intent);
         }
         else {
             constraintLayout.setBackgroundColor(Color.WHITE);
