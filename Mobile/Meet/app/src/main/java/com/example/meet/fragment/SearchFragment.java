@@ -17,9 +17,11 @@ import android.widget.ImageButton;
 
 import com.example.meet.R;
 import com.example.meet.adapter.SearchUserRecyclerAdapter;
+import com.example.meet.model.UserModel;
 import com.example.meet.utils.Firebaseutil;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.Query;
 
-import retrofit2.http.Query;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -96,21 +98,6 @@ public class SearchFragment extends Fragment {
                 setupSearchRecyclerView(searchTerm);
             }
         });
-
-//        listView = view.findViewById(R.id.listview_search_friend);
-//        searchFriendModels = new ArrayList<>();
-//        searchFriendModels.add(new SearchFriendModel(1,"Quan"));
-//        searchFriendModels.add(new SearchFriendModel(2,"Tai"));
-//        searchFriendModels.add(new SearchFriendModel(3,"Wang"));
-//        searchFriendModels.add(new SearchFriendModel(4,"Loc"));
-//        searchFriendModels.add(new SearchFriendModel(5,"Thai"));
-//        searchFriendModels.add(new SearchFriendModel(6,"Quan Pham"));
-//        searchFriendModels.add(new SearchFriendModel(7,"Quan Tan"));
-//        searchFriendModels.add(new SearchFriendModel(8,"Cieu"));
-//        searchFriendModels.add(new SearchFriendModel(9,"Tommy"));
-//
-//        ListSearchAdapter adapter = new ListSearchAdapter(requireContext(),R.layout.item_custom_listview_search, searchFriendModels);
-//        listView.setAdapter(adapter);
         return view;
     }
 
@@ -118,10 +105,14 @@ public class SearchFragment extends Fragment {
     private void setupSearchRecyclerView(String searchTerm) {
 
         Query query = Firebaseutil.allUserCollectionReference()
-                .whereGreaterThanOrEqualTo("")
-                
-        adapter  = new SearchUserRecyclerAdapter(, requireContext());
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+                .whereGreaterThanOrEqualTo("name",searchTerm);
+
+        FirestoreRecyclerOptions<UserModel> options = new FirestoreRecyclerOptions.Builder<UserModel>()
+                .setQuery((com.google.firebase.firestore.Query) query, UserModel.class).build();
+
+        adapter  = new SearchUserRecyclerAdapter(options, requireActivity());
+        //adapter  = new SearchUserRecyclerAdapter(options, getApplicationContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
         recyclerView.setAdapter(adapter);
         adapter.startListening();
     }
@@ -139,8 +130,12 @@ public class SearchFragment extends Fragment {
         super.onStop();
         if (adapter!= null){
             adapter.stopListening();
+            System.out.println("on stop");
+            requireActivity().finish();
         }
+
     }
+
 
     @Override
     public void onResume() {
@@ -149,4 +144,5 @@ public class SearchFragment extends Fragment {
             adapter.startListening();
         }
     }
+
 }

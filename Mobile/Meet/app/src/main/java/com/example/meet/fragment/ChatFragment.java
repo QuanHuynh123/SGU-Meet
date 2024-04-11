@@ -1,17 +1,30 @@
 package com.example.meet.fragment;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.example.meet.Activity.ProfileActivity;
 import com.example.meet.R;
 import com.example.meet.adapter.ListViewChatAdapter;
+import com.example.meet.adapter.RecentChatRecyclerAdapter;
+import com.example.meet.adapter.SearchUserRecyclerAdapter;
 import com.example.meet.model.ChatModel;
+import com.example.meet.model.ChatroomModel;
+import com.example.meet.model.UserModel;
+import com.example.meet.utils.Firebaseutil;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +40,11 @@ public class ChatFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    RecyclerView recyclerView;
 
-    private List<ChatModel> chatModelFriend;
+    ImageView imageView;
 
-    private ListView listView;
+    RecentChatRecyclerAdapter adapter;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -68,25 +82,68 @@ public class ChatFragment extends Fragment {
         }
     }
 
+    @SuppressLint("WrongViewCast")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat,container,false);
+        recyclerView = view.findViewById(R.id.recycler_view);
+        imageView = view.findViewById(R.id.avatar);
 
-        listView = view.findViewById(R.id.list_view);
-        chatModelFriend = new ArrayList<>();
-        chatModelFriend.add(new ChatModel(1,"Quan","Hello anh ban","2h30pm"));
-        chatModelFriend.add(new ChatModel(2,"Tai","Choi game khong","2h30pm"));
-        chatModelFriend.add(new ChatModel(3,"Wang","Tft ne bro","2h30pm"));
-        chatModelFriend.add(new ChatModel(4,"Loc","Tft ne bro","2h30pm"));
-        chatModelFriend.add(new ChatModel(5,"Thai","Tft ne bro","2h30pm"));
-        chatModelFriend.add(new ChatModel(6,"Quan Pham","Tft ne bro","2h30pm"));
-        chatModelFriend.add(new ChatModel(7,"Quan Tan","Tft ne bro","2h30pm"));
-        chatModelFriend.add(new ChatModel(8,"Cieu","Tft ne bro","2h30pm"));
-        chatModelFriend.add(new ChatModel(9,"Tommy","Tft ne bro","2h30pm"));
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
 
-        ListViewChatAdapter adapter = new ListViewChatAdapter(requireContext(),R.layout.item_custom_listview, chatModelFriend);
-        listView.setAdapter(adapter);
+        setupRecyclerView();
         return view;
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void setupRecyclerView() {
+
+        Query query = Firebaseutil.allChatroomCollectionReference()
+                .whereArrayContains("userIds",Firebaseutil.currenUserId())
+                .orderBy("lastMessageTimestamp",Query.Direction.DESCENDING);
+
+        FirestoreRecyclerOptions<ChatroomModel> options = new FirestoreRecyclerOptions.Builder<ChatroomModel>()
+                .setQuery((com.google.firebase.firestore.Query) query, ChatroomModel.class).build();
+
+        adapter  = new RecentChatRecyclerAdapter(options, getContext());
+        //adapter  = new SearchUserRecyclerAdapter(options, getApplicationContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (adapter!= null){
+            adapter.startListening();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (adapter!= null){
+            adapter.stopListening();
+            System.out.println("on stop");
+            requireActivity().finish();
+        }
+
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter!= null){
+            adapter.notifyDataSetChanged();
+        }
     }
 }

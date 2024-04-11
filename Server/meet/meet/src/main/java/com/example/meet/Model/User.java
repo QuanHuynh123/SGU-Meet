@@ -1,5 +1,6 @@
 package com.example.meet.Model;
 
+import com.google.cloud.Timestamp;
 import lombok.*;
 
 @Getter
@@ -8,9 +9,10 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class User {
-    private String documentId;
-    private int age;
     private String email;
     private String gender;
+    private int age;
     private String name;
+    private Timestamp createdTimestamp;
+    private String userId;
 }

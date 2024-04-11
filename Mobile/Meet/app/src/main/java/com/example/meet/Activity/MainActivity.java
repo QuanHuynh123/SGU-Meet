@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentArrayList.add(new CallFragment());
         fragmentArrayList.add(new SettingFragment());
 
+
         AdapterViewPaper adapterViewPaper = new AdapterViewPaper(this,fragmentArrayList);
         viewPager.setAdapter(adapterViewPaper);
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -79,6 +80,11 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        boolean returnToSearchFragment = getIntent().getBooleanExtra("returnToSearchFragment", false);
+        if (returnToSearchFragment) {
+            viewPager.setCurrentItem(0); // 1 là index của ChatFragment trong fragmentArrayList
+        }
 
     }
 

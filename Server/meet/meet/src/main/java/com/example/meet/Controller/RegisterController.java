@@ -13,13 +13,14 @@ public class RegisterController {
     @Autowired
     RegisterService registerService;
 
-    @GetMapping("/register")
+    @PostMapping("/register")
     public RegistrationStatus registerAccount(@RequestBody AccountUser accountUser) throws FirebaseAuthException {
+        System.out.println("Call register");
         return registerService.registerAccountUser(accountUser);
     }
 
-    @PutMapping("/register/update")
-    public RegistrationStatus updateAccount(@RequestBody AccountUser accountUser) throws FirebaseAuthException {
-        return registerService.updateAccountUser(accountUser);
-    }
+//    @PutMapping("/register/updatePassword")
+//    public RegistrationStatus updateAccount(@RequestBody AccountUser accountUser) throws FirebaseAuthException {
+//        return registerService.updateAccountUser(accountUser);
+//    }
 }

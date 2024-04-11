@@ -85,37 +85,44 @@ public class LoginActivity extends AppCompatActivity {
 
         String email = edtUser.getText().toString().trim();
         String password = edtPassword.getText().toString().trim();
+        if(email == null || password == null)
+            Toast.makeText(LoginActivity.this, "Vui lòng nhập đầy đủ", Toast.LENGTH_SHORT).show();
+        else {
 
-        progressDialog.show();
+            progressDialog.show();
 
-        auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = auth.getCurrentUser();
-                            if(user != null){
-                                user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                        if (task.isSuccessful()){
-                                            String idToken = task.getResult().getToken();
-                                            System.out.println(idToken);
-                                            postIdTokenToSessionLogin(idToken);
+            auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            progressDialog.dismiss();
+                            if (task.isSuccessful()) {
+                                FirebaseUser user = auth.getCurrentUser();
+                                if (user != null) {
+                                    user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+                                            if (task.isSuccessful()) {
+                                                String idToken = task.getResult().getToken();
+                                                SharedPreferences sharedPreferences = getSharedPreferences(FirebaseAuth.getInstance().getUid(), Context.MODE_PRIVATE);
+                                                String retrievedSessionCookie = sharedPreferences.getString("sessionCookie", "");
+                                                verifySession(retrievedSessionCookie, idToken);
+                                                FirebaseAuth.getInstance().getUid();
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
                         }
-                    }
-                });
+                    });
+        }
     }
+
     private void postIdTokenToSessionLogin( String idToken) {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setIdToken(idToken);
@@ -123,46 +130,42 @@ public class LoginActivity extends AppCompatActivity {
         Retrofit retrofit = ApiConfig.getRetrofit();
         LoginService loginService = retrofit.create(LoginService.class);
 
-        Call<String> call = loginService.createSessionCookie(loginRequest);
-        call.enqueue(new Callback<String>() {
+        Call<LoginRequest> call = loginService.createSessionCookie(loginRequest);
+        call.enqueue(new Callback<LoginRequest>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if(response.isSuccessful()){
-                    String sessionCookie = response.headers().get("Set-Cookie");
-                    saveCookie(sessionCookie);
-                    verifySession();
-                }else {
-                    Log.v("Failed","Get cookie to failed!");
-                }
+            public void onResponse(Call<LoginRequest> call, Response<LoginRequest> response) {
+             String sessionCookie = response.body().getIdToken();
+             saveCookie(sessionCookie);
+             verifySession(sessionCookie,idToken);
             }
-
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Log.v("FailedAPI","Call API to failed");
+            public void onFailure(Call<LoginRequest> call, Throwable t) {
+                Log.v("FailedAPI","Call API cookie to failed");
             }
         });
 
     }
 
-    private void verifySession() {
+    private void verifySession(String sessionCookieValue, String idToken) {
         Retrofit retrofit = ApiConfig.getRetrofit();
         LoginService loginService = retrofit.create(LoginService.class);
-
-        Call<String> profileCall = loginService.verifySessionCookie();
-        profileCall.enqueue(new Callback<String>() {
+        System.out.println(sessionCookieValue);
+        Call<Boolean> profileCall = loginService.verifySessionCookie(sessionCookieValue);
+        profileCall.enqueue(new Callback<Boolean>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                 if (response.isSuccessful()) {
                     Log.v("Success", "Xác minh thành công ");
                     redirectToMain();
                 } else {
+                    postIdTokenToSessionLogin(idToken);
                     Log.v("Failed","Xác minh thất bại");
                 }
             }
-
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Log.v("FailedAPI","Call API to failed");
+
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                Log.v("FailedAPI","Call API verify to failed");
             }
         });
     }
@@ -172,10 +175,11 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "signInWithEmail:success");
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void saveCookie(String sessionCookie){
-        SharedPreferences sharedPreferences = getSharedPreferences("MyCookie", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(FirebaseAuth.getInstance().getUid(), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("sessionCookie",sessionCookie);
         editor.apply();

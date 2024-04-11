@@ -20,8 +20,8 @@ public class CRUDController {
     }
 
     @GetMapping("/get")
-    public CRUD getCRUD(@RequestParam String documentId) throws InterruptedException, ExecutionException{
-        return crudService.getCRUD(documentId);
+    public CRUD getCRUD(@RequestParam String name) throws InterruptedException, ExecutionException{
+        return crudService.getCRUD(name);
     }
 
     @PutMapping("/updatec")

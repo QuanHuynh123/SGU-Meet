@@ -16,17 +16,33 @@ public class CRUDService {
         return collectionApiFuture.get().getId();
     }
 
-    public CRUD getCRUD(String documentId) throws ExecutionException, InterruptedException {
+    public CRUD getCRUD(String name) throws ExecutionException, InterruptedException {
         Firestore dbFirestore  = FirestoreClient.getFirestore();
-        DocumentReference documentReference = dbFirestore.collection("user").document(documentId);
-        ApiFuture<DocumentSnapshot> future = documentReference.get();
-        DocumentSnapshot document = future.get();
-        CRUD crud ;
-        if(document.exists()){
+        Query query = dbFirestore.collection("user")
+                .whereEqualTo("name", "quan");
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+//        DocumentReference documentReference = dbFirestore.collection("user").document(name);
+//        ApiFuture<DocumentSnapshot> future = documentReference.get();
+//        DocumentSnapshot document = future.get();
+//        CRUD crud ;
+//        if(document.exists()){
+//            crud = document.toObject(CRUD.class);
+//            return crud;
+//        }
+//        return null;
+        CRUD crud = new CRUD();
+        for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+            // Lấy dữ liệu từ tài liệu và gán vào đối tượng CRUD
             crud = document.toObject(CRUD.class);
-            return crud;
+
+            // In ra thông tin của đối tượng CRUD
+            System.out.println("Name: " + crud.getName());
+            System.out.println("Gender: " + crud.getGender());
+            System.out.println("Email: " + crud.getEmail());
+            System.out.println("Age: " + crud.getAge());
         }
-        return null;
+
+        return crud;
     }
     public String updateCRUD(CRUD crud) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();

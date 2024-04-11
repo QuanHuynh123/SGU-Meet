@@ -3,6 +3,7 @@ package com.example.meet.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -68,32 +69,34 @@ public class RegisterActivity extends AppCompatActivity {
             Retrofit retrofit = ApiConfig.getRetrofit();
             RegisterService registerService = retrofit.create(RegisterService.class);
             Call<RegistrationStatus> call = registerService.registerAccount(accountUser);
-
             call.enqueue(new Callback<RegistrationStatus>() {
                 @Override
                 public void onResponse(Call<RegistrationStatus> call, Response<RegistrationStatus> response) {
-                    if (response.isSuccessful()) {
                         RegistrationStatus registrationStatus = response.body();
                         if (registrationStatus != null ){
                             if (registrationStatus.equals(RegistrationStatus.SUCCESS)){
                                 Log.v("Success","Create account succces");
+                                progressDialog.dismiss();
+                                Intent intent = new Intent(RegisterActivity.this,LoginActivity.class);
+                                startActivity(intent);
+                                finish();
                             }else if(registrationStatus.equals(RegistrationStatus.EMAIL_ALREADY_EXISTS)){
                                 Log.v("EmailExists","Email is already exists");
                             }else {
                                 Log.v("Failed",".............");
                             }
-                        }
-                    } else {
+                        } else {
                         Log.v("Failed","Create account failed");
                     }
+                    progressDialog.dismiss();
                 }
 
                 @Override
                 public void onFailure(Call<RegistrationStatus> call, Throwable t) {
-                    Log.v("Failed","Get cookie to failed!");
+                    Log.v("Failed","Register user to failed!");
+                    progressDialog.dismiss();
                 }
             });
         }
-        else Toast.makeText(RegisterActivity.this,"Authentication failed.",Toast.LENGTH_SHORT).show();
     }
 }
