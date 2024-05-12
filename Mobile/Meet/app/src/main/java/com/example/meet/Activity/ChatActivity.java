@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -25,6 +26,7 @@ import com.example.meet.utils.Firebaseutil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -32,8 +34,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -46,8 +50,10 @@ public class ChatActivity extends AppCompatActivity {
     ImageButton btnPrevious;
     ImageView avatar;
     RecyclerView recyclerView;
-
+    String name ;
     ChatRecyclerAdapter chatRecyclerAdapter;
+
+    ImageView showCurrentPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +62,15 @@ public class ChatActivity extends AppCompatActivity {
 
         otherUser = new UserModel();
         Intent intent = getIntent();
-        otherUser.setName(intent.getStringExtra("username"));
         otherUser.setUserId(intent.getStringExtra("userid"));
+
+        getNameOtherUser(otherUser.getUserId(), new UserNameCallback() {
+            @Override
+            public void onUserNameReceived(String userName) {
+                otherUser.setName(userName);
+                username.setText(otherUser.getName());
+            }
+        });
 
         String userId1= FirebaseAuth.getInstance().getUid(), userId2 = otherUser.getUserId();
         if(userId1.hashCode() < userId2.hashCode()){
@@ -72,6 +85,7 @@ public class ChatActivity extends AppCompatActivity {
         btnPrevious = findViewById(R.id.previous_icon);
         avatar = findViewById(R.id.avatar);
         recyclerView = findViewById(R.id.chat_recycler_view);
+        showCurrentPos = findViewById(R.id.btn_google_map);
 
         btnPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,8 +107,16 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        getOrCreateChatroomModel();
-        setupChatRecyclerView();
+        showCurrentPos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChatActivity.this,GoogleMapActivity.class);
+                startActivity(intent);
+            }
+        });
+
+    getOrCreateChatroomModel();
+    setupChatRecyclerView();
     }
 
     private void setupChatRecyclerView() {
@@ -163,4 +185,26 @@ public class ChatActivity extends AppCompatActivity {
         });
 
     }
+
+    public void getNameOtherUser(String idUser, UserNameCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Query query = db.collection("user").whereEqualTo("userId", idUser);
+
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (DocumentSnapshot document : task.getResult().getDocuments()) {
+                    UserModel otherUser = document.toObject(UserModel.class);
+                    if (otherUser != null) {
+                        String userName = otherUser.getName();
+                        callback.onUserNameReceived(userName);
+                    }
+                }
+            }
+        });
+    }
+
+    public interface UserNameCallback {
+        void onUserNameReceived(String userName);
+    }
+
 }

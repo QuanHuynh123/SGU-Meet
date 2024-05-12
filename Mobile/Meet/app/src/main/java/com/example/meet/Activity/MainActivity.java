@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.example.meet.R;
 import com.example.meet.adapter.AdapterViewPaper;
@@ -87,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 
 
     private void userInformation(){

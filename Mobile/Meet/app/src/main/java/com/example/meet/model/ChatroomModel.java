@@ -61,4 +61,15 @@ public class ChatroomModel {
     public void setLastMessage(String lastMessage) {
         this.lastMessage = lastMessage;
     }
+
+    @Override
+    public String toString() {
+        return "ChatroomModel{" +
+                "chatroomId='" + chatroomId + '\'' +
+                ", userIds=" + userIds +
+                ", lastMessageTimestamp=" + lastMessageTimestamp +
+                ", lastMessageSenderId='" + lastMessageSenderId + '\'' +
+                ", lastMessage='" + lastMessage + '\'' +
+                '}';
+    }
 }

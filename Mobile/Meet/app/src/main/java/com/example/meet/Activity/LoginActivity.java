@@ -106,8 +106,12 @@ public class LoginActivity extends AppCompatActivity {
                                                 String idToken = task.getResult().getToken();
                                                 SharedPreferences sharedPreferences = getSharedPreferences(FirebaseAuth.getInstance().getUid(), Context.MODE_PRIVATE);
                                                 String retrievedSessionCookie = sharedPreferences.getString("sessionCookie", "");
-                                                verifySession(retrievedSessionCookie, idToken);
-                                                FirebaseAuth.getInstance().getUid();
+                                                if (retrievedSessionCookie.isEmpty()) {
+                                                    postIdTokenToSessionLogin(idToken);
+                                                }else {
+                                                    verifySession(retrievedSessionCookie, idToken);
+                                                    FirebaseAuth.getInstance().getUid();
+                                                }
                                             }
                                         }
                                     });

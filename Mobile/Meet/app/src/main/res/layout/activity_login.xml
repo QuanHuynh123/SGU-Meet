@@ -90,7 +90,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:textColor="@color/white"
-        android:background="@drawable/button_radius"
+        android:background="@drawable/button_boder2"
         android:text="@string/login"
         android:textAllCaps="false"
         android:textSize="25sp"

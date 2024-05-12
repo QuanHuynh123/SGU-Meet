@@ -32,7 +32,7 @@
         android:id="@+id/btn_join"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_radius"
+        android:background="@drawable/button_boder2"
         android:fontFamily="@font/roboto"
         android:textStyle="bold"
         android:paddingLeft="50dp"
