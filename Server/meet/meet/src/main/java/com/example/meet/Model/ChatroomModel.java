@@ -4,7 +4,6 @@ import com.google.cloud.Timestamp;
 import lombok.*;
 
 import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,3 +16,4 @@ public class ChatroomModel {
     String  lastMessageSenderId;
     String lastMessage;
 }
+

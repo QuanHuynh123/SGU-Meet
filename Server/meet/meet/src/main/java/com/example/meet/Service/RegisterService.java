@@ -76,4 +76,33 @@ public class RegisterService {
         return userRecord.getUid();
     }
 
+    public RegistrationStatus updateAccountUser( User accountUser) throws FirebaseAuthException {
+        String uid = getUidUser(accountUser.getEmail());
+        try {
+            UserRecord.UpdateRequest request = new UserRecord.UpdateRequest(uid)
+                    .setEmail(accountUser.getEmail())
+                    .setDisplayName(accountUser.getName());
+            UserRecord userRecord = FirebaseAuth.getInstance().updateUser(request);
+            System.out.println("Successfully created new user: " + userRecord.getUid());
+            updateUserFirestore(accountUser);
+            return RegistrationStatus.SUCCESS;
+        }catch (FirebaseAuthException e) {
+                // Xử lý các trường hợp lỗi khác
+                return RegistrationStatus.FAILURE;
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateUserFirestore(User accountUser) throws ExecutionException, InterruptedException, FirebaseAuthException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        // Lấy getDocumentId làm idUser;
+        String userUid = getUidUser(accountUser.getEmail());
+
+        User user = new User(accountUser.getEmail(),accountUser.getGender(),accountUser.getAge(),accountUser.getName(), accountUser.getCreatedTimestamp(),userUid);
+        DocumentReference userRef = dbFirestore.collection("user").document(userUid);
+    }
+
 }

@@ -15,13 +15,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import com.example.meet.enumCustom.RegistrationStatus;
 
 import com.example.meet.R;
 import com.example.meet.configApi.ApiConfig;
+import com.example.meet.enumCustom.RegistrationStatus;
 import com.example.meet.interfaceApiService.ProfileService;
 import com.example.meet.model.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -38,6 +41,8 @@ public class ProfileActivity extends AppCompatActivity {
     TextView tv_logout;
     Spinner spinnerGender;
     ProgressBar progressBar;
+
+    Timestamp timestamp;
 
     ImageView imageView, previous_icon;
 
@@ -120,6 +125,7 @@ public class ProfileActivity extends AppCompatActivity {
                     edt_username.setText(userModel.getName());
                     edt_email.setText(userModel.getEmail());
                     edt_age.setText(String.valueOf(userModel.getAge()));
+                    timestamp = userModel.getCreatedTimestamp();
                 }
                 else System.out.println("user is null");
             }
@@ -132,17 +138,59 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void updateProfile() {
+        setInProgress(true);
         String newUsername = edt_username.getText().toString();
         if(newUsername.isEmpty() || newUsername.length()<3){
             edt_username.setError("Username length should be at least 3 chars");
             return;
         }
+        String email = edt_email.getText().toString();
+        if(email.isEmpty() || email.length()<3){
+            edt_username.setError("Email length should be at least 3 chars");
+            return;
+        }
+        int age = Integer.parseInt(edt_age.getText().toString());
+        if(age == 0){
+            edt_username.setError("Age length should be at least 3 chars");
+            return;
+        }
+        String selectedGender = spinnerGender.getSelectedItem().toString();
+
         userModel.setName(newUsername);
-        setInProgress(true);
+        userModel.setEmail(email);
+        userModel.setAge(age);
+        userModel.setGender(selectedGender);
+
+        Retrofit retrofit = ApiConfig.getRetrofit();
+        ProfileService profileService = retrofit.create(ProfileService.class);
+        Call<RegistrationStatus> call = profileService.updateProfileUser(userModel);
+        call.enqueue(new Callback<RegistrationStatus>() {
+            @Override
+            public void onResponse(Call<RegistrationStatus> call, Response<RegistrationStatus> response) {
+                setInProgress(false);
+                RegistrationStatus registrationStatus = response.body();
+                if (registrationStatus != null ){
+                    if (registrationStatus.equals(RegistrationStatus.SUCCESS)){
+                        getUserData();
+                    } else {
+                        Log.v("Failed",".............");
+                    }
+                } else {
+                    Log.v("Failed","Failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RegistrationStatus> call, Throwable t) {
+                System.out.println("Call API failed !");
+            }
+        });
     }
 
     private void Logout() {
-
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(ProfileActivity.this,LoginActivity.class);
+        startActivity(intent);
     }
     void setInProgress(boolean inProgress){
         if(inProgress){

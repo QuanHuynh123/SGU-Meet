@@ -41,32 +41,8 @@ public class UserService {
         return null;
     }
 
-//    public RegistrationStatus updateAccountUser( AccountUser accountUser) throws FirebaseAuthException {
-//        String uid = getUidUser(accountUser.getEmail());
-//        try {
-//            UserRecord.UpdateRequest request = new UserRecord.UpdateRequest(uid)
-//                    .setEmail(accountUser.getEmail())
-//                    .setEmailVerified(accountUser.isEmailVerified())
-//                    .setPassword(accountUser.getPassword())
-//                    .setDisplayName(accountUser.getName())
-//                    .setDisabled(accountUser.isDisabled());
-//            UserRecord userRecord = FirebaseAuth.getInstance().updateUser(request);
-//            return RegistrationStatus.SUCCESS;
-//        }catch (FirebaseAuthException e) {
-//            // Xử lý các trường hợp lỗi khác nhau
-//            if ("EMAIL_EXISTS".equals(e.getErrorCode())) {
-//                return RegistrationStatus.EMAIL_ALREADY_EXISTS;
-//            } else {
-//                // Xử lý các trường hợp lỗi khác
-//                return RegistrationStatus.FAILURE;
-//            }
-//        }
-//    }
 
-    public RegistrationStatus updateProfileUser(User user){
 
-        return null;
-    }
 
 
 }

@@ -30,20 +30,11 @@ public class ProfileController {
         return userService.getProfileUser(userId);
     }
 
-    @GetMapping("/chatrooms")
-    public List<ChatroomModel> getAllChatRooms() throws ExecutionException, InterruptedException {
-        return testService.getAllChatrooms();
-    }
-    @GetMapping("/get1chatroom")
-    public List<ChatroomModel> get1ChatRoom(@RequestParam String userId) throws ExecutionException, InterruptedException {
-        return testService.get1ChatRoom(userId);
-    }
 
-
-//    @PutMapping("/updateProfile")
-//    public User updateProfileUser(@RequestBody User user) throws ExecutionException, InterruptedException {
-//        if(registerService.updateAccountUser(user)== )
-//        return userService.updateProfileUser(user);
-//    }
+    @PutMapping("/updateProfile")
+    public RegistrationStatus updateProfileUser(@RequestBody User user) throws ExecutionException, InterruptedException, FirebaseAuthException {
+        System.out.println("update profile");
+        return registerService.updateAccountUser(user);
+    }
 
 }

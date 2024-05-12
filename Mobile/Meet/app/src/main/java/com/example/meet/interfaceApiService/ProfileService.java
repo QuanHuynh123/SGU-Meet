@@ -9,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface ProfileService {
@@ -16,6 +17,6 @@ public interface ProfileService {
     @GET("/profile")
     Call<UserModel> getProfileUser(@Query("userId") String userId);
 
-    @POST("/updateProfile")
-    Call<UserModel> updateProfileUser(@Body UserModel userModel);
+    @PUT("/updateProfile")
+    Call<RegistrationStatus> updateProfileUser(@Body UserModel userModel);
 }
