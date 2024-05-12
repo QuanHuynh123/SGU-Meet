@@ -12,22 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.example.meet.Activity.ProfileActivity;
 import com.example.meet.R;
-import com.example.meet.adapter.ListViewChatAdapter;
 import com.example.meet.adapter.RecentChatRecyclerAdapter;
-import com.example.meet.adapter.SearchUserRecyclerAdapter;
-import com.example.meet.model.ChatModel;
 import com.example.meet.model.ChatroomModel;
-import com.example.meet.model.UserModel;
 import com.example.meet.utils.Firebaseutil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -104,6 +97,7 @@ public class ChatFragment extends Fragment {
 
     @SuppressLint("RestrictedApi")
     private void setupRecyclerView() {
+        System.out.println("logggggggggggggggggggggggggg");
 
         Query query = Firebaseutil.allChatroomCollectionReference()
                 .whereArrayContains("userIds",Firebaseutil.currenUserId())
@@ -113,7 +107,6 @@ public class ChatFragment extends Fragment {
                 .setQuery((com.google.firebase.firestore.Query) query, ChatroomModel.class).build();
 
         adapter  = new RecentChatRecyclerAdapter(options, getContext());
-        //adapter  = new SearchUserRecyclerAdapter(options, getApplicationContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         adapter.startListening();

@@ -17,6 +17,7 @@ import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 
 @SpringBootApplication
 public class CRUDRunner {
@@ -29,8 +30,13 @@ public class CRUDRunner {
         /*ClassLoader classLoader = ClassLoader.class.getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource("serviceAccountKey.json")).getFile());*/
 
-        File file = new File("src/main/resources/serviceAccountKey.json");
+//        File file = new File("src/main/resources/serviceAccountKey.json");
+//        FileInputStream serviceAccount = new FileInputStream(file.getAbsoluteFile());
+
+        ClassLoader classLoader = CRUDRunner.class.getClassLoader();
+        File file = new File(Objects.requireNonNull(classLoader.getResource("serviceAccountKey.json")).getFile());
         FileInputStream serviceAccount = new FileInputStream(file.getAbsoluteFile());
+
 
         // Kết nối Firebase
         FirebaseOptions options = new FirebaseOptions.Builder()

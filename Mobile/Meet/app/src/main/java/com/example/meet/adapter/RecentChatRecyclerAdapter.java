@@ -2,6 +2,7 @@ package com.example.meet.adapter;
 
 import static com.example.meet.utils.Firebaseutil.documentReference;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<Chatroom
         this.context = context;
     }
 
+    @SuppressLint("RecyclerView")
     @Override
     protected void onBindViewHolder(@NonNull ChatroomModelViewHolder holder, int position, @NonNull ChatroomModel chatroomModel) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -60,23 +62,25 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<Chatroom
                             holder.lastMessageText.setText("You: " + chatroomModel.getLastMessage());
                         else
                             holder.lastMessageText.setText(chatroomModel.getLastMessage());
-                        System.out.println("last message :" + chatroomModel.getLastMessage());
+                        //System.out.println("last message :" + chatroomModel.getLastMessage());
                         holder.lastMessageTime.setText(Firebaseutil.timestampToString(chatroomModel.getLastMessageTimestamp()));
 
-                        holder.itemView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(context, ChatActivity.class);
-                                intent.putExtra("username",userModel.getName());
-                                intent.putExtra("userid",userModel.getUserId());
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                context.startActivity(intent);
-                            }
-                        });
                     } else {
                         System.out.println("User bị null :(((((((((((((((((((((");
                     }
                 }
+            }
+        });
+
+        final  String idUser = a ;
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("vị trí : " + position);
+                Intent intent = new Intent(context, ChatActivity.class);
+                intent.putExtra("userid", idUser);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
             }
         });
     }

@@ -39,7 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
     Spinner spinnerGender;
     ProgressBar progressBar;
 
-    ImageView imageView;
+    ImageView imageView, previous_icon;
 
     UserModel userModel;
     Button btnUpdate;
@@ -57,12 +57,21 @@ public class ProfileActivity extends AppCompatActivity {
         btnUpdate = findViewById(R.id.btn_update_profile);
         tv_logout = findViewById(R.id.tv_logout);
         progressBar = findViewById(R.id.progress_bar);
+        previous_icon = findViewById(R.id.previous_icon);
 
         String[] genders = {"Male", "Female"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, genders);
         spinnerGender.setAdapter(adapter);
 
         getUserData();
+
+        previous_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent  = new Intent(ProfileActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +119,7 @@ public class ProfileActivity extends AppCompatActivity {
                 if (userModel != null){
                     edt_username.setText(userModel.getName());
                     edt_email.setText(userModel.getEmail());
-                    edt_age.setText(userModel.getAge());
+                    edt_age.setText(String.valueOf(userModel.getAge()));
                 }
                 else System.out.println("user is null");
             }
