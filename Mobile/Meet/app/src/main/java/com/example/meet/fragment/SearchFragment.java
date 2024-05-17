@@ -20,7 +20,9 @@ import com.example.meet.adapter.SearchUserRecyclerAdapter;
 import com.example.meet.model.UserModel;
 import com.example.meet.utils.Firebaseutil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.storage.FirebaseStorage;
 
 
 /**
@@ -103,9 +105,13 @@ public class SearchFragment extends Fragment {
 
     @SuppressLint("RestrictedApi")
     private void setupSearchRecyclerView(String searchTerm) {
+        // Chuyển đổi searchTerm thành chữ thường để thực hiện tìm kiếm không phân biệt chữ hoa chữ thường
+        String searchTermLower = searchTerm.toLowerCase();
+        String endSearchTerm = searchTermLower + "\uf8ff";
 
-        Query query = Firebaseutil.allUserCollectionReference()
-                .whereGreaterThanOrEqualTo("name",searchTerm);
+        Query query = FirebaseFirestore.getInstance().collection("user")
+                .whereGreaterThanOrEqualTo("name", searchTermLower)
+                .whereLessThanOrEqualTo("name", endSearchTerm);
 
         FirestoreRecyclerOptions<UserModel> options = new FirestoreRecyclerOptions.Builder<UserModel>()
                 .setQuery((com.google.firebase.firestore.Query) query, UserModel.class).build();

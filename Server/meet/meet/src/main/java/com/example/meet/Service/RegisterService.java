@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import com.google.cloud.Timestamp;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -65,7 +67,9 @@ public class RegisterService {
 
         Date date = new Date();
         Timestamp timestamp = Timestamp.of(new java.sql.Timestamp(date.getTime()));
-        User user = new User(accountUser.getEmail(),"",0,accountUser.getName(), timestamp,userUid);
+        String nameLowercase = accountUser.getName().toLowerCase();
+        List<String> array = new ArrayList<>();
+        User user = new User(accountUser.getEmail(),"",0,nameLowercase,array,array,array,array,timestamp,userUid);
         ApiFuture<DocumentReference> collectionApiFuture = dbFirestore.collection("user").add(user);
         System.out.println(collectionApiFuture.get().getId());
     }
@@ -101,8 +105,8 @@ public class RegisterService {
         // Lấy getDocumentId làm idUser;
         String userUid = getUidUser(accountUser.getEmail());
 
-        User user = new User(accountUser.getEmail(),accountUser.getGender(),accountUser.getAge(),accountUser.getName(), accountUser.getCreatedTimestamp(),userUid);
-        DocumentReference userRef = dbFirestore.collection("user").document(userUid);
+        //User user = new User(accountUser.getEmail(),accountUser.getGender(),accountUser.getAge(),accountUser.getName(), accountUser.getCreatedTimestamp(),userUid);
+        //DocumentReference userRef = dbFirestore.collection("user").document(userUid);
     }
 
 }

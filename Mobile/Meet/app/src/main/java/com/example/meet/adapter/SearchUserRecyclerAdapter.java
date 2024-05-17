@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -34,16 +35,21 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserMode
             if (userModel.getUserId().equals(Firebaseutil.currenUserId())){
                 holder.username.setText(userModel.getName()+" (Me)");
             }
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!userModel.getUserId().equals(Firebaseutil.currenUserId())) {
                     Intent intent = new Intent(context, ChatActivity.class);
-                    intent.putExtra("username",userModel.getName());
-                    intent.putExtra("userid",userModel.getUserId());
+                    intent.putExtra("username", userModel.getName());
+                    intent.putExtra("userid", userModel.getUserId());
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
+                } else {
+                    // Optional: Show a message or perform an action when clicking on yourself
+                    Toast.makeText(context, "You cannot chat with yourself.", Toast.LENGTH_SHORT).show();
                 }
-            });
+            }
+        });
     }
 
     @NonNull
