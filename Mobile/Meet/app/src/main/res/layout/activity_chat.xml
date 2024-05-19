@@ -39,7 +39,7 @@
             android:layout_marginLeft="20px"
             android:layout_toRightOf="@id/avatar"/>
 
-        <ImageButton
+        <com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton
             android:id="@+id/btn_phone"
             android:layout_width="35dp"
             android:layout_height="35dp"
@@ -50,7 +50,7 @@
             android:padding="8dp"
             android:layout_marginRight="10dp"/>
 
-        <ImageButton
+        <com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton
             android:id="@+id/btn_video_call"
             android:layout_width="38dp"
             android:layout_height="38dp"

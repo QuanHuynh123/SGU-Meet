@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.example.meet.Activity.ChatWithFriendActivity;
 import com.example.meet.R;
 import com.example.meet.model.ChatModel;
 
@@ -76,8 +75,7 @@ public class ListViewChatAdapter extends BaseAdapter {
             }
         });
         if(positionSelect == position){
-            Intent intent = new Intent(context, ChatWithFriendActivity.class);
-            context.startActivity(intent);
+            System.out.println("hi " + position);
         }
         else {
             constraintLayout.setBackgroundColor(Color.WHITE);

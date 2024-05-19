@@ -12,17 +12,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.meet.R;
 import com.example.meet.adapter.SearchUserRecyclerAdapter;
+import com.example.meet.configApi.ApiConfig;
+import com.example.meet.interfaceApiService.ProfileService;
 import com.example.meet.model.UserModel;
 import com.example.meet.utils.Firebaseutil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 
 /**
@@ -44,6 +53,7 @@ public class SearchFragment extends Fragment {
     private RecyclerView recyclerView;
     private EditText searchInput;
     private ImageButton searchButton;
+    private  UserModel myAccount;
 
     SearchUserRecyclerAdapter adapter;
 
@@ -116,12 +126,31 @@ public class SearchFragment extends Fragment {
         FirestoreRecyclerOptions<UserModel> options = new FirestoreRecyclerOptions.Builder<UserModel>()
                 .setQuery((com.google.firebase.firestore.Query) query, UserModel.class).build();
 
-        adapter  = new SearchUserRecyclerAdapter(options, requireActivity());
-        //adapter  = new SearchUserRecyclerAdapter(options, getApplicationContext());
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        recyclerView.setAdapter(adapter);
-        adapter.startListening();
+        Retrofit retrofit = ApiConfig.getRetrofit();
+        ProfileService profileService = retrofit.create(ProfileService.class);
+        Call<UserModel> call = profileService.getProfileUser(FirebaseAuth.getInstance().getUid());
+        call.enqueue(new Callback<UserModel>() {
+            @Override
+            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                myAccount = response.body();
+                if (myAccount == null){
+                    System.out.println("user is null");
+                } else {
+                    // Adapter chỉ được thiết lập khi dữ liệu người dùng đã sẵn sàng
+                    adapter = new SearchUserRecyclerAdapter(options, requireActivity(), myAccount);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+                    recyclerView.setAdapter(adapter);
+                    adapter.startListening();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserModel> call, Throwable t) {
+                System.out.println("Call API failed !");
+            }
+        });
     }
+
 
     @Override
     public void onStart() {

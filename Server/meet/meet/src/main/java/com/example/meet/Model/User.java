@@ -20,7 +20,6 @@ public class User {
     private String name;
     private List<String> friendRequests;
     private List<String> sentFriendRequests;
-    private List<String> acceptedFriendRequests;
     private List<String> friendList;
     @JsonDeserialize(using = TimestampDeserializer.class)
     private Timestamp createdTimestamp;

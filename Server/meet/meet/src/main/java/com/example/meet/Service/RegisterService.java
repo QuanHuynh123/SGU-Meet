@@ -22,7 +22,6 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 public class RegisterService {
-
     @Autowired
     UserService userService;
 
@@ -63,25 +62,18 @@ public class RegisterService {
     public void saveUserFirestore(AccountUser accountUser) throws ExecutionException, InterruptedException, FirebaseAuthException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         // Lấy getDocumentId làm idUser;
-        String userUid = getUidUser(accountUser.getEmail());
+        String userUid = userService.getUidUser(accountUser.getEmail());
 
         Date date = new Date();
         Timestamp timestamp = Timestamp.of(new java.sql.Timestamp(date.getTime()));
         String nameLowercase = accountUser.getName().toLowerCase();
         List<String> array = new ArrayList<>();
-        User user = new User(accountUser.getEmail(),"",0,nameLowercase,array,array,array,array,timestamp,userUid);
+        User user = new User(accountUser.getEmail(),"",0,nameLowercase,array,array,array,timestamp,userUid);
         ApiFuture<DocumentReference> collectionApiFuture = dbFirestore.collection("user").add(user);
-        System.out.println(collectionApiFuture.get().getId());
-    }
-
-
-    public String getUidUser(String email) throws FirebaseAuthException {
-        UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
-        return userRecord.getUid();
     }
 
     public RegistrationStatus updateAccountUser( User accountUser) throws FirebaseAuthException {
-        String uid = getUidUser(accountUser.getEmail());
+        String uid = userService.getUidUser(accountUser.getEmail());
         try {
             UserRecord.UpdateRequest request = new UserRecord.UpdateRequest(uid)
                     .setEmail(accountUser.getEmail())
@@ -91,8 +83,8 @@ public class RegisterService {
             updateUserFirestore(accountUser);
             return RegistrationStatus.SUCCESS;
         }catch (FirebaseAuthException e) {
-                // Xử lý các trường hợp lỗi khác
-                return RegistrationStatus.FAILURE;
+            // Xử lý các trường hợp lỗi khác
+            return RegistrationStatus.FAILURE;
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
@@ -103,10 +95,11 @@ public class RegisterService {
     public void updateUserFirestore(User accountUser) throws ExecutionException, InterruptedException, FirebaseAuthException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         // Lấy getDocumentId làm idUser;
-        String userUid = getUidUser(accountUser.getEmail());
+        String userUid = userService.getUidUser(accountUser.getEmail());
 
         //User user = new User(accountUser.getEmail(),accountUser.getGender(),accountUser.getAge(),accountUser.getName(), accountUser.getCreatedTimestamp(),userUid);
         //DocumentReference userRef = dbFirestore.collection("user").document(userUid);
     }
+
 
 }

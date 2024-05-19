@@ -1,13 +1,30 @@
 package com.example.meet.utils;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.example.meet.configApi.ApiConfig;
+import com.example.meet.interfaceApiService.ProfileService;
+import com.example.meet.model.UserModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class Firebaseutil {
 
@@ -46,4 +63,5 @@ public class Firebaseutil {
     public static  String timestampToString(Timestamp timestamp){
         return new SimpleDateFormat("HH:MM").format(timestamp.toDate());
     }
+
 }

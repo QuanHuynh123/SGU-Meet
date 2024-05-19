@@ -11,7 +11,6 @@ public class UserModel {
     private String name;
     private List<String> friendRequests;
     private List<String> sentFriendRequests;
-    private List<String> acceptedFriendRequests;
     private List<String> friendList;
     private Timestamp createdTimestamp;
     private String userId;
@@ -19,14 +18,13 @@ public class UserModel {
     public UserModel() {
     }
 
-    public UserModel(String email, String gender, int age, String name, List<String> friendRequests, List<String> sentFriendRequests, List<String> acceptedFriendRequests, List<String> friendList, Timestamp createdTimestamp, String userId) {
+    public UserModel(String email, String gender, int age, String name, List<String> friendRequests, List<String> sentFriendRequests,  List<String> friendList, Timestamp createdTimestamp, String userId) {
         this.email = email;
         this.gender = gender;
         this.age = age;
         this.name = name;
         this.friendRequests = friendRequests;
         this.sentFriendRequests = sentFriendRequests;
-        this.acceptedFriendRequests = acceptedFriendRequests;
         this.friendList = friendList;
         this.createdTimestamp = createdTimestamp;
         this.userId = userId;
@@ -80,14 +78,6 @@ public class UserModel {
         this.sentFriendRequests = sentFriendRequests;
     }
 
-    public List<String> getAcceptedFriendRequests() {
-        return acceptedFriendRequests;
-    }
-
-    public void setAcceptedFriendRequests(List<String> acceptedFriendRequests) {
-        this.acceptedFriendRequests = acceptedFriendRequests;
-    }
-
     public List<String> getFriendList() {
         return friendList;
     }
@@ -122,7 +112,6 @@ public class UserModel {
                 ", name='" + name + '\'' +
                 ", friendRequests=" + friendRequests +
                 ", sentFriendRequests=" + sentFriendRequests +
-                ", acceptedFriendRequests=" + acceptedFriendRequests +
                 ", friendList=" + friendList +
                 ", createdTimestamp=" + createdTimestamp +
                 ", userId='" + userId + '\'' +

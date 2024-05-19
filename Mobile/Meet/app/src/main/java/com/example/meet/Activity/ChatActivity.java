@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.Firebase;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -35,8 +37,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.zegocloud.uikit.prebuilt.call.ZegoUIKitPrebuiltCallService;
+import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationConfig;
+import com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton;
+import com.zegocloud.uikit.service.defines.ZegoUIKitUser;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 public class ChatActivity extends AppCompatActivity {
@@ -54,6 +61,8 @@ public class ChatActivity extends AppCompatActivity {
     ChatRecyclerAdapter chatRecyclerAdapter;
 
     ImageView showCurrentPos;
+
+    ZegoSendCallInvitationButton btnCall , btnVideoCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +95,12 @@ public class ChatActivity extends AppCompatActivity {
         avatar = findViewById(R.id.avatar);
         recyclerView = findViewById(R.id.chat_recycler_view);
         showCurrentPos = findViewById(R.id.btn_google_map);
+        btnCall = findViewById(R.id.btn_phone);
+        btnVideoCall = findViewById(R.id.btn_video_call);
+
+        startService(FirebaseAuth.getInstance().getUid());
+        setVoiceCall(otherUser.getUserId());
+        setVideoCall(otherUser.getUserId());
 
         btnPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,6 +220,30 @@ public class ChatActivity extends AppCompatActivity {
 
     public interface UserNameCallback {
         void onUserNameReceived(String userName);
+    }
+
+    void startService(String userID){
+        Application application = getApplication(); // Android's application context
+        long appID = 1419731492;   // yourAppID
+        String appSign ="4f2ca855301945d6c2a6b21a73d2ba926eb9bb9e24a226f8fe2d2b975f83cc3f";  // yourAppSign
+        //String userID =; // yourUserID, userID should only contain numbers, English characters, and '_'.
+        String userName =userID;   // yourUserName
+
+        ZegoUIKitPrebuiltCallInvitationConfig callInvitationConfig = new ZegoUIKitPrebuiltCallInvitationConfig();
+
+        ZegoUIKitPrebuiltCallService.init(getApplication(), appID, appSign, userID, userName,callInvitationConfig);
+    }
+
+    void setVoiceCall(String targetUserID){
+        btnCall.setIsVideoCall(false);
+        btnCall.setResourceID("zego_uikit_call"); // Please fill in the resource ID name that has been configured in the ZEGOCLOUD's console here.
+        btnCall.setInvitees(Collections.singletonList(new ZegoUIKitUser(targetUserID)));
+    }
+
+    void setVideoCall(String targetUserID){
+        btnVideoCall.setIsVideoCall(true);
+        btnVideoCall.setResourceID("zego_uikit_call"); // Please fill in the resource ID name that has been configured in the ZEGOCLOUD's console here.
+        btnVideoCall.setInvitees(Collections.singletonList(new ZegoUIKitUser(targetUserID)));
     }
 
 }

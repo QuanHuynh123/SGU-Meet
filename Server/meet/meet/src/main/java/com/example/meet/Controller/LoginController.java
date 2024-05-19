@@ -23,6 +23,7 @@ public class LoginController {
 
     @PostMapping("/sessionLogin")
     public LoginRequest createSessionCookie(@RequestBody LoginRequest request) {
+        System.out.println("Tạo sessionCookie");
         // Get the ID token sent by the client
         String idToken = request.getIdToken();
         // Set session expiration to 5 days.
@@ -44,12 +45,14 @@ public class LoginController {
 
     @PostMapping("/verifyCookie")
     public Boolean verifySessionCookie(@RequestHeader("cookie") String sessionCookieValue) {
+        System.out.println("Xác thực cookie");
         if (sessionCookieValue == null ) System.out.println("Session Cookie is null");
         else System.out.println(sessionCookieValue);
         try {
             final boolean checkRevoked = false;
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifySessionCookie(
                     sessionCookieValue, checkRevoked);
+            System.out.println(decodedToken);
             return true;
         } catch (FirebaseAuthException e) {
             // Session cookie is unavailable, invalid or revoked. Force user to login.

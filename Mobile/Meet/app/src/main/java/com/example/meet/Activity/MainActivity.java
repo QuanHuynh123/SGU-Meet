@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     ViewPager2 viewPager;
     ArrayList<Fragment> fragmentArrayList = new ArrayList<>();
-
+    ImageView notification;
     private BottomNavigationView bottomNavigationView ;
 
 
@@ -38,11 +38,20 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = findViewById(R.id.paperMain);
         bottomNavigationView = findViewById(R.id.navigationbottom);
+        notification = findViewById(R.id.notification);
+
         fragmentArrayList.add(new ChatFragment());
         fragmentArrayList.add(new SearchFragment());
         fragmentArrayList.add(new CallFragment());
         fragmentArrayList.add(new SettingFragment());
 
+        notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,AddFriendActivity.class);
+                startActivity(intent);
+            }
+        });
 
         AdapterViewPaper adapterViewPaper = new AdapterViewPaper(this,fragmentArrayList);
         viewPager.setAdapter(adapterViewPaper);
@@ -92,27 +101,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    private void userInformation(){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user == null){
-            return;
-        }
-
-        String name  = user.getDisplayName();
-        String email = user.getEmail();
-
-//        if(name == null) textName.setVisibility(View.GONE);
-//        else {
-//            textName.setVisibility(View.VISIBLE);
-//            textName.setText(name);
-//        }
-//
-//        Uri imgUrl = user.getPhotoUrl();
-//        textName.setText(email);
-//
-//        Glide.with(this).load(imgUrl).error(R.drawable.avatar).into(imgAvatar);
-//
-//        System.out.println(" cc " + Glide.with(this).load(R.drawable.avatar));
-    }
 }

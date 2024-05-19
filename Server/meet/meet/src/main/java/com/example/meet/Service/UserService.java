@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import com.google.firebase.cloud.FirestoreClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ExecutionException;
@@ -16,9 +17,13 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class UserService {
 
+    public String getUidUser(String email) throws FirebaseAuthException {
+        UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
+        return userRecord.getUid();
+    }
+
     public User getProfileUser(String userId) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        System.out.println("USER ID LA : " + userId + " Client la : " + dbFirestore);
 
         // Tạo truy vấn để lấy người dùng dựa trên trường userId
         Query query = dbFirestore.collection("user").whereEqualTo("userId", userId);
@@ -37,12 +42,7 @@ public class UserService {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-
         return null;
     }
-
-
-
-
 
 }
